@@ -1,20 +1,31 @@
 describe('CodeBreaker testing', () => {
-    it('Setting setSecret and guess, value = 1234', () => {
+    it('Test game with secret value = 1234', () => {
         cy.visit('http://localhost:4200/');
-        cy.get('#set-secret__input')
+
+        cy.get('#form__input')
             .type('1234')
             .should('have.value', '1234');
-        cy.get('#set-secret__button')
+        cy.get('.form__button')
             .click();
-        cy.get('#response-set-secret')
+        cy.get('#response')
             .should('contain', 'ok, let the game begins');
 
-        cy.get('#set-guess__input')
+        cy.get('#form__input')
+            .clear()
+            .type('4321')
+            .should('have.value', '4321');
+        cy.get('.form__button')
+            .click();
+        cy.get('#response')
+            .should('contain', '____');
+
+        cy.get('#form__input')
+            .clear()
             .type('1234')
             .should('have.value', '1234');
-        cy.get('#set-guess__button')
+        cy.get('.form__button')
             .click();
-        cy.get('#response-guess')
+        cy.get('#response')
             .should('contain', 'XXXX');
     });
 });

@@ -1,14 +1,31 @@
-<h1>{{title}}</h1>
-<div class="form">
-  <h3>Ingrese el numero secreto</h3>
-  <input id="set-secret__input" type="number" [(ngModel)]="number">
-  <button id="set-secret__button" (click)="setSecret()">Set Secret</button>
-  <p id="response-set-secret">{{response}}</p>
-</div>
+<div class="container">
+  <h1 class="title animated fadeIn faster">{{title}}</h1>
 
-<div class="form">
-  <h3>Adivine el numero</h3>
-  <input id="set-guess__input" type="number" [(ngModel)]="guess">
-  <button id="set-guess__button" (click)="checkGuess()">Probar</button>
-  <p id="response-guess">{{guessResponse}}</p>
+  <div class="form animated fadeIn">
+    <h2 *ngIf="secretNumberUnsetted">Set the secret number</h2>
+    <h2 *ngIf="!secretNumberUnsetted">Try to guess</h2>
+    <input id="form__input" type="number" [(ngModel)]="number">
+    <ng-container *ngIf="secretNumberUnsetted; else secretNumberSetted">
+      <button class="form__button" (click)="setSecret()">Set Secret</button>
+    </ng-container>
+    <ng-template #secretNumberSetted>
+      <button class="form__button" (click)="checkGuess()" [disabled]="guessedNumber">Try to guess</button>
+      <h2 id="response">{{response}}</h2>
+    </ng-template>
+  </div>
+
+  <ng-container *ngIf="!secretNumberUnsetted">
+    <div class="results">
+      <h1 class="animated fadeIn">Results</h1>
+      <ul class="results-list">
+        <li class="results-list__item animated zoomInDown faster" *ngFor="let result of results; let i = index;">
+          <h3 class="result-guess">{{result.guess}} - {{result.response}}</h3>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="guessedNumber" class="animated zoomInDown won">
+      <h1>{{message}}</h1>
+      <button (click)="secretNumberUnsetted = !secretNumberUnsetted">Play again</button>
+    </div>
+  </ng-container>
 </div>
