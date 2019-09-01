@@ -10,11 +10,22 @@ export class CodeBreakerAPIService {
 
   constructor(private http: HttpClient) { }
 
-  setSecretNumber(number: number) {
+  generateSecretNumber() {
+    let numbers: number[] = [];
+    while (numbers.length < 4) {
+      let randomNum: number = Math.floor(Math.random() * 10);
+      if (!numbers.includes(randomNum)) numbers.push(randomNum);
+    }
+    return numbers.join('');
+  }
+
+  setSecretNumber() {
+    let number = this.generateSecretNumber();
+    number = '1234';
     return this.http.get(`${this.BASE_URL}/setsecret/${number}`);
   }
 
-  tryToGuessNumber(number: number) {
+  tryToGuessNumber(number: string) {
     return this.http.get(`${this.BASE_URL}/guess/${number}`);
   }
 }

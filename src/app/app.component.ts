@@ -1,36 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CodeBreakerAPIService } from './services/code-breaker-api.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
   title = 'Code Breaker';
-  secretNumberUnsetted: boolean = true;
-  guessedNumber: boolean = false;
-  results: any[] = [];
-  number: number;
+  guessedNumber: boolean;
+  results: any[];
   response: string;
   message: string;
   constructor(private codeBreakerAPI: CodeBreakerAPIService) { }
 
-  setSecret() {
-    if (!this.number) return;
-    this.codeBreakerAPI.setSecretNumber(this.number)
+  ngOnInit() {
+    this.codeBreakerAPI.setSecretNumber()
       .subscribe(res => {
         this.response = res['message'];
-        this.secretNumberUnsetted = false;
       });
     this.results = [];
     this.message = null;
     this.guessedNumber = false;
-    this.number = null;
   }
 
-  checkGuess() {
-    if (!this.number) return;
-    this.codeBreakerAPI.tryToGuessNumber(this.number)
+  playAgain() {
+    this.codeBreakerAPI.setSecretNumber()
+      .subscribe(res => {
+        this.response = res['message'];
+      });
+    this.results = [];
+    this.message = null;
+    this.guessedNumber = false;
+  }
+  checkGuess(input: HTMLInputElement) {
+    if (!input.value || input.value.length !== 4) return;
+    this.codeBreakerAPI.tryToGuessNumber(input.value)
       .subscribe(res => {
         this.response = res['result'];
         if (this.response === 'XXXX') {
@@ -40,10 +45,10 @@ export class AppComponent {
           this.response = 'no matches';
         }
         this.results.push({
-          guess: this.number,
+          guess: input.value,
           response: res['result']
         });
-        this.number = null;
+        input.value = null;
       });
   }
 }
