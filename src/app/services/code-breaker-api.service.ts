@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CodeBreakerAPIService {
 
-  BASE_URL = 'http://localhost:3000';
+  BASE_URL = 'https://codebreaker-andresisazaa.herokuapp.com';
 
   constructor(private http: HttpClient) { }
 
